@@ -1,0 +1,18 @@
+import uvicorn
+from fastapi import FastAPI
+from starlette.responses import RedirectResponse
+
+from routing import crud_router, statistics_router
+app = FastAPI(
+    title="Test task for RSG"
+)
+app.include_router(crud_router)
+app.include_router(statistics_router)
+
+@app.get("/")
+async def root():
+    return RedirectResponse(url="/docs")
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
