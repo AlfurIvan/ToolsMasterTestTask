@@ -6,10 +6,11 @@ authors = [
     {name = "AlfurIvan",email = "vani4zhary@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<4.0"
 dependencies = [
     "fastapi[standart] (>=0.115.8,<0.116.0)",
-    "uvicorn (>=0.34.0,<0.35.0)"
+    "uvicorn (>=0.34.0,<0.35.0)",
+    "httpx (>=0.28.1,<0.29.0)"
 ]
 
 
