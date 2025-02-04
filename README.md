@@ -8,7 +8,7 @@ Then run:
 
 Application startup:
 -
-    poetry run uvicorn app:app --reload --port 800
+    poetry run uvicorn app:app --reload --port 8000
 
 Docs:
 - 
