@@ -2,7 +2,7 @@ import re
 from pydantic import BaseModel, Field, ValidationError, BeforeValidator
 from typing import Annotated, Any
 from enum import Enum
-from utils.coda import get_columns
+from utils.utils import get_columns
 
 date_pattern = re.compile(r"^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/\d{4}$")
 

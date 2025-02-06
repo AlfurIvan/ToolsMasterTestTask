@@ -14,8 +14,7 @@ app.include_router(statistics_router)
 
 @app.get("/")
 async def root():
-    return {'message': ''}
-    # return RedirectResponse(url="/docs")
+    return RedirectResponse(url="/docs")
 
 
 if __name__ == "__main__":

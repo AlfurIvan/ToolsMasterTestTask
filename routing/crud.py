@@ -1,6 +1,5 @@
 import asyncio
 
-import httpx
 from fastapi import APIRouter
 
 from schemas.docs import (
@@ -8,34 +7,25 @@ from schemas.docs import (
     CodaCreateResponse,
     CodaUpdateDeleteResponse
 )
-from utils.coda import (
-    auth_header,
-    BASE_URL,
-    TOOLS_MASTER_DOC_ID,
-    TIMETRACKER_TABLE_ID,
-    get_columns,
-    get_raw_columns,
-
-)
 
 from schemas.base import TimetrackerRow
+from utils.utils import get_columns
+from utils.coda_requests import (
+    get_raw_columns,
+    get_raw_rows,
+    create_new_row,
+    delete_row_by_id,
+    update_row_by_id
+)
 
 router = APIRouter(prefix="/table", tags=["crud"])
 
 
 @router.get("/")
 async def table() -> CodaResponses:
-    async with httpx.AsyncClient() as client:
-        rows = await client.get(
-            f'{BASE_URL}/docs/{TOOLS_MASTER_DOC_ID}/tables/{TIMETRACKER_TABLE_ID}/rows?visibleOnly=false&useColumnNames=true',
-            headers=auth_header
-        )
-        columns = await get_raw_columns()
-        result = CodaResponses(
-            columns=columns['items'],
-            rows=rows.json()['items']
-        )
-        return result
+    rows = await get_raw_rows(False)
+    columns = await get_raw_columns()
+    return CodaResponses(columns=columns['items'], rows=rows.json()['items'])
 
 
 @router.post("/new-row/")
@@ -43,33 +33,16 @@ async def new_row(data: list[TimetrackerRow]) -> CodaCreateResponse:
     restruct_data = await asyncio.gather(*[obj.render_to_cells() for obj in data])
     columns = await get_columns()
     prep_data = {"rows": restruct_data, "keyColumns": [columns["name"]["id"]]}
-    async with httpx.AsyncClient() as client:
-        resp = await client.post(
-            f'{BASE_URL}/docs/{TOOLS_MASTER_DOC_ID}/tables/{TIMETRACKER_TABLE_ID}/rows',
-            json=prep_data,
-            headers={**auth_header, "Content-Type": "application/json"}
-        )
-        return resp.json()
+    return await create_new_row(prep_data)
 
 
 @router.put("/update-row/{row_id}")
-async def update_row(row_id: str, data: TimetrackerRow)-> CodaUpdateDeleteResponse:
+async def update_row(row_id: str, data: TimetrackerRow) -> CodaUpdateDeleteResponse:
     restruct_data = await data.render_to_cells()
     prep_data = {"row": restruct_data}
-    async with httpx.AsyncClient() as client:
-        resp = await client.put(
-            f'{BASE_URL}/docs/{TOOLS_MASTER_DOC_ID}/tables/{TIMETRACKER_TABLE_ID}/rows/{row_id}',
-            json=prep_data,
-            headers={**auth_header, "Content-Type": "application/json"}
-        )
-    return resp.json()
+    return await update_row_by_id(row_id, prep_data)
 
 
 @router.delete("/delete-row/{row_id}")
 async def delete_row(row_id: str) -> CodaUpdateDeleteResponse:
-    async with httpx.AsyncClient() as client:
-        resp = await client.delete(
-            f'{BASE_URL}/docs/{TOOLS_MASTER_DOC_ID}/tables/{TIMETRACKER_TABLE_ID}/rows/{row_id}',
-            headers={**auth_header, "Content-Type": "application/json"}
-        )
-    return resp.json()
+    return await delete_row_by_id(row_id)
