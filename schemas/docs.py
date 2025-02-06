@@ -1,13 +1,13 @@
 """These schemas only for OpenAPI documentation"""
-from pydantic import BaseModel, HttpUrl, Field
-from typing import List, Optional, Dict, Any
+from pydantic import BaseModel, HttpUrl
+from typing import Any
 
 
 class Format(BaseModel):
     type: str
     isArray: bool
-    format: Optional[str] = None
-    table: Optional[Dict[str, Any]] = None
+    format: str | None = None
+    table: dict[str, Any] | None = None
 
 
 class Column(BaseModel):
@@ -15,10 +15,10 @@ class Column(BaseModel):
     type: str
     name: str
     href: HttpUrl
-    display: Optional[bool] = None
+    display: bool | None = None
     format: Format
-    calculated: Optional[bool] = None
-    formula: Optional[str] = None
+    calculated: bool | None = None
+    formula: str | None = None
 
 
 class Row(BaseModel):
@@ -30,18 +30,10 @@ class Row(BaseModel):
     createdAt: str
     updatedAt: str
     browserLink: HttpUrl
-    values: Dict[str, Any]
+    values: dict[str, Any]
 
 
 class CodaResponses(BaseModel):
-    columns: List[Column]
-    rows: List[Row]
-
-
-class CodaCreateResponse(BaseModel):
-    requestId: str
-
-
-class CodaUpdateDeleteResponse(BaseModel):
-    id: str
-    requestId: str
+    columns: list[Column]
+    rows: list[Row]
+    statuses: list[int]
