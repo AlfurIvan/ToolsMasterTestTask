@@ -1,5 +1,7 @@
+"""Schema for easy processing user's data"""
+
 import re
-from pydantic import BaseModel, Field, ValidationError, BeforeValidator
+from pydantic import BaseModel, Field, BeforeValidator
 from typing import Annotated, Any
 from enum import Enum
 from utils.utils import get_columns

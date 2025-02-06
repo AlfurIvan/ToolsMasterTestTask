@@ -1,3 +1,5 @@
+"""basic CRUD endpoints"""
+
 import asyncio
 
 from fastapi import APIRouter
@@ -5,7 +7,6 @@ from fastapi.responses import JSONResponse
 
 from schemas.docs import (
     CodaResponses,
-
 )
 
 from schemas.base import TimetrackerRow

@@ -1,5 +1,4 @@
-import os
-
+"""Her Majesty Application by itself"""
 import uvicorn
 from fastapi import FastAPI
 from starlette.responses import RedirectResponse

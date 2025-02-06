@@ -1,3 +1,4 @@
+"""Here all requests to Coda.io"""
 import httpx
 
 from config import CODA_API_KEY, TOOLS_MASTER_DOC_ID, BASE_URL, TIMETRACKER_TABLE_ID

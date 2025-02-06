@@ -1,7 +1,7 @@
+"""Other utils"""
 import re
 
 from utils.coda_requests import get_raw_columns
-
 
 
 def to_snake_case(name: str) -> str:
